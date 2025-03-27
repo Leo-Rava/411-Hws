@@ -12,17 +12,40 @@ configure_logger(logger)
 
 
 class RingModel:
+    """
+    A class to manage a ring of boxers.
+
+    Attributes:
+        ring (List[Boxer]): The lust of boxers (2) in the ring
+
+    """
+
     def __init__(self):
+        """Initializes the RingModel with an empty ring.
+
+        """
         self.ring: List[Boxer] = []
 
     def fight(self) -> str:
+        """Simulates fight between boxers added to ring
+        
+        Args: None
+
+        Raises: 
+            ValueError: If there are less than two boxers in the ring
+        
+        """
+        logger.info("Recieved request to fight two boxers")
+
         if len(self.ring) < 2:
+            logger.error("Invalid value: Not enough boxers in the ring.")
             raise ValueError("There must be two boxers to start a fight.")
 
         boxer_1, boxer_2 = self.get_boxers()
 
         skill_1 = self.get_fighting_skill(boxer_1)
         skill_2 = self.get_fighting_skill(boxer_2)
+        logger.info("Successfully recieved skills from boxers")
 
         # Compute the absolute skill difference
         # And normalize using a logistic function for better probability scaling
@@ -46,11 +69,30 @@ class RingModel:
         return winner.name
 
     def clear_ring(self):
+        """Clears all songs from the playlist.
+
+        Clears all boxers from the ring. If the ring is already empty, logs a warning.
+
+        """
+        logger.info("Recieved request to clear the ring")
+
         if not self.ring:
+            logger.error("Clearing an empty ring")
             return
         self.ring.clear()
+        logger.info("Successfully cleared the ring")
 
     def enter_ring(self, boxer: Boxer):
+        """Adds a boxer to the ring.
+
+        Args:
+            boxer (Boxer): The boxer to add to the ring.
+
+        Raises:
+            TypeError: If the song is not a valid Boxer instance.
+            ValueError: If a boxer with the same 'name' already exists.
+
+        """
         if not isinstance(boxer, Boxer):
             raise TypeError(f"Invalid type: Expected 'Boxer', got '{type(boxer).__name__}'")
 
