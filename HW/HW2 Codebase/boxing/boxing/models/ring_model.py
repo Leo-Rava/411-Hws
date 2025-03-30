@@ -93,25 +93,45 @@ class RingModel:
             ValueError: If a boxer with the same 'name' already exists.
 
         """
+        logger.info("Request to add boxer to the ring")
         if not isinstance(boxer, Boxer):
+            logger.error(f"Incorrect type entered, not a boxer, got {type(boxer).__name__}")
             raise TypeError(f"Invalid type: Expected 'Boxer', got '{type(boxer).__name__}'")
 
         if len(self.ring) >= 2:
+            logger.error("Invalid action: Cannot have more than 2 boxers.")
             raise ValueError("Ring is full, cannot add more boxers.")
 
         self.ring.append(boxer)
+        logger.info("Successfully added boxer to the ring")
 
     def get_boxers(self) -> List[Boxer]:
+        """Returns the current boxers in the ring
+
+        Returns: 
+            Boxers: The list of boxers in the ring
+
+        Raises: 
+            ValueError: If the ring is empty
+
+        """
         if not self.ring:
-            pass
+            logger.error("Invalid action: cannot retrieve boxers from empty ring.")
+            raise ValueError("Ring is empty, cannot retrieve boxers.")
         else:
             pass
-
+        logger.info("Retrieving list of boxers in the ring")
         return self.ring
 
     def get_fighting_skill(self, boxer: Boxer) -> float:
         # Arbitrary calculations
+        """Returns the skill of an inputted boxer
+
+        Returns:
+            float: The skill level of a boxer
+        """
         age_modifier = -1 if boxer.age < 25 else (-2 if boxer.age > 35 else 0)
         skill = (boxer.weight * len(boxer.name)) + (boxer.reach / 10) + age_modifier
 
+        logger.info(f"Retrieving boxer skill: {skill}")
         return skill
