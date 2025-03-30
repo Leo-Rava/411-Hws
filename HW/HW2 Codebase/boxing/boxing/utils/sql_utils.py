@@ -76,7 +76,7 @@ def check_table_exists(tablename: str):
 
 @contextmanager
 def get_db_connection():
-     """Context manager for SQLite database connection.
+    """Context manager for SQLite database connection.
 
     Yields:
         sqlite3.Connection: The SQLite connection object.
