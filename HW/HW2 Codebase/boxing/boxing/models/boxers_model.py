@@ -129,7 +129,6 @@ def get_leaderboard(sort_by: str = "wins") -> List[dict[str, Any]]:
     
     '''
 
-
     query = """
         SELECT id, name, weight, height, reach, age, fights, wins,
                (wins * 1.0 / fights) AS win_pct
@@ -311,10 +310,6 @@ def update_boxer_stats(boxer_id: int, result: str) -> None:
         sqlite3.Error: If any database error occurs.
     
     '''
-
-
-
-
 
 
     if result not in {'win', 'loss'}:
