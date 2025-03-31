@@ -53,7 +53,7 @@ check_db() {
 #
 ##########################################################
 
-create_boxer() {
+add_boxer() {
   name=$1
   weight=$2
   height=$3
@@ -119,39 +119,6 @@ get_boxer_by_name() {
   fi
 }
 
-get_weight_class() {
-  weight=$1
-
-  echo "Getting a weight class of boxer given the weight..."
-  response=$(curl -s -X GET "$BASE_URL/get-weight-class/$weight")
-  if echo "$response" | grep -q '"status": "success"'; then
-    echo "Weight class retrieved successfully."
-    if [ "$ECHO_JSON" = true ]; then
-      echo "Boxer weight class JSON:"
-      echo "$response" | jq .
-    fi
-  else
-    echo "Failed to get weight class."
-    exit 1
-  fi
-}
-
-update_boxer_status() {
-  boxer_id=$1
-  results=$2
-
-  echo "Updating boxer ($id, $results) to the ring..."
-  curl -s -X POST "$BASE_URL/update-boxer-status" -H "Content-Type: application/json" \
-    -d "{\"boxer-id\":\"$boxer_id\", \"weight\":\"$weight\"}"| grep -q '"status": "success"'
-
-  if [ $? -eq 0 ]; then
-    echo "Boxer status updated successfully."
-  else
-    echo "Failed to update boxer status."
-    exit 1
-  fi
-}
-
 ############################################################
 #
 # Ring Management
@@ -179,9 +146,9 @@ enter_ring() {
 }
 
 
-clear_ring() {
+clear_boxers() {
   echo "Clearing ring..."
-  response=$(curl -s -X POST "$BASE_URL/clear-ring")
+  response=$(curl -s -X POST "$BASE_URL/clear-boxers")
 
   if echo "$response" | grep -q '"status": "success"'; then
     echo "Playlist cleared successfully."
@@ -215,26 +182,9 @@ get_boxers() {
   fi
 }
 
-get_fighting_skill() {
-  boxer=$1
-  echo "Retrieving boxer's fighting skill ($boxer)..."
-  response=$(curl -s -X GET "$BASE_URL/get-fighting-skill/$boxer")
-
-  if echo "$response" | grep -q '"status": "success"'; then
-    echo "Song retrieved successfully by track number."
-    if [ "$ECHO_JSON" = true ]; then
-      echo "Song JSON:"
-      echo "$response" | jq .
-    fi
-  else
-    echo "Failed to retrieve song by track number."
-    exit 1
-  fi
-}
-
 # Function to play the rest of the playlist
-fight() {
-  echo "Playing rest of the playlist..."
+bout() {
+  echo "initiating fight between boxers in the ring..."
   curl -s -X POST "$BASE_URL/fight" | grep -q '"status": "success"'
   if [ $? -eq 0 ]; then
     echo "Boxers fought played successfully."
@@ -284,17 +234,14 @@ delete_boxer 1
 
 get_boxer_by_id 2
 get_boxer_by_name "Bob"
-get_leaderboard
-get_weight_class 180
 
-update_boxer_status 3 5
+get_leaderboard
 
 enter_ring "Jebedia" 200 78 4.1 19
 enter_ring "Queen" 130 60 2.6 37 
 
 get_boxers
-get_fighting_skill "Donna" 190 40 4 40
 
-fight
+bout
 
-clear_ring
+clear_boxers
