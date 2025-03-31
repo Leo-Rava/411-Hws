@@ -176,7 +176,7 @@ def get_leaderboard(sort_by: str = "wins") -> List[dict[str, Any]]:
         raise e
 
 
-def gret_boxer_by_id(boxer_id: int) -> Boxer:
+def get_boxer_by_id(boxer_id: int) -> Boxer:
 
     """Retrieves a boxer from the list by its boxer ID.
 

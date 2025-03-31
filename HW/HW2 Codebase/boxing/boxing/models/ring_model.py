@@ -90,14 +90,14 @@ class RingModel:
 
         Raises:
             TypeError: If the song is not a valid Boxer instance.
-            ValueError: If a boxer with the same 'name' already exists.
+            ValueError: If there are already 2 boxers in the ring
 
         """
         logger.info("Request to add boxer to the ring")
         if not isinstance(boxer, Boxer):
             logger.error(f"Incorrect type entered, not a boxer, got {type(boxer).__name__}")
             raise TypeError(f"Invalid type: Expected 'Boxer', got '{type(boxer).__name__}'")
-
+     
         if len(self.ring) >= 2:
             logger.error("Invalid action: Cannot have more than 2 boxers.")
             raise ValueError("Ring is full, cannot add more boxers.")
