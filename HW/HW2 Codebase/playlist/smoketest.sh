@@ -1,4 +1,4 @@
-#!/bin/bash
+a#!/bin/bash
 
 # Define the base URL for the Flask API
 BASE_URL="http://localhost:5000/api"
