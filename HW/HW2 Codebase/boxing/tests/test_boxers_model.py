@@ -250,9 +250,9 @@ def test_get_weight_class(mock_cursor):
 
     """
     mock_cursor.fetchall.return_value = [
-        (1, "boxy1", 204, 155, 20.0, 23, False)
-        (2, "boxy2", 167, 155, 20.0, 23, False)
-        (3, "boxy3", 134, 155, 20.0, 23, False)
+        (1, "boxy1", 204, 155, 20.0, 23, False),
+        (2, "boxy2", 167, 155, 20.0, 23, False),
+        (3, "boxy3", 134, 155, 20.0, 23, False),
         (4, "boxy4", 126, 155, 20.0, 23, False)
     ]
 
@@ -300,6 +300,9 @@ def test_update_boxer_stats_loss(mock_cursor):
 
 
 def test_update_boxer_stats_invalid(mock_cursor):
+    """
+    
+    """
 
     mock_cursor.fetchone.return_value = None
 
@@ -311,10 +314,17 @@ def test_update_boxer_stats_invalid(mock_cursor):
 
 
 def test_get_leaderboard_win(mock_cursor):
+
+    """Testing the creation of a leaderboard of wins.
+    
+    """
+
+
+
     mock_cursor.fetchall.return_value = [
-        (1, "boxy1", 204, 155, 20.0, 23, False)
-        (2, "boxy2", 167, 155, 20.0, 23, False)
-        (3, "boxy3", 134, 155, 20.0, 23, False)
+        (1, "boxy1", 204, 155, 20.0, 23, False),
+        (2, "boxy2", 167, 155, 20.0, 23, False),
+        (3, "boxy3", 134, 155, 20.0, 23, False),
         (4, "boxy4", 126, 155, 20.0, 23, False)
     ]
     update_boxer_stats(2, "win")
@@ -344,10 +354,16 @@ def test_get_leaderboard_win(mock_cursor):
 
 def test_get_leaderboard_win_pct(mock_cursor):
     
+    """Testing the creation of a leaderboard with win_pct
+    
+    """
+
+
+
     mock_cursor.fetchall.return_value = [
-        (1, "boxy1", 204, 155, 20.0, 23, False)
-        (2, "boxy2", 167, 155, 20.0, 23, False)
-        (3, "boxy3", 134, 155, 20.0, 23, False)
+        (1, "boxy1", 204, 155, 20.0, 23, False),
+        (2, "boxy2", 167, 155, 20.0, 23, False),
+        (3, "boxy3", 134, 155, 20.0, 23, False),
         (4, "boxy4", 126, 155, 20.0, 23, False)
     ]
     update_boxer_stats(1, "win")
@@ -383,6 +399,12 @@ def test_get_leaderboard_win_pct(mock_cursor):
 
 
 def test_get_leaderboard_invalid_sort():
+
+    """Testing the error message of a leaderboard with an invalid param.
+    
+    """
+
+
     with pytest.raises(ValueError):
         get_leaderboard(sort_by="invalid_sort")
 

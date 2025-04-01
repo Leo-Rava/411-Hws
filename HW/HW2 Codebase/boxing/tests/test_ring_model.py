@@ -53,7 +53,7 @@ def test_enter_ring_with_non_boxer(ring_model):
     
     """
 
-    with pytest.raises(TypeError, f"Invalid type: Expected 'Boxer', got '{type(boxer).__name__}'"):
+    with pytest.raises(TypeError, f"Invalid type: Expected 'Boxer', got '{type(Boxer).__name__}'"):
         ring_model.enter_ring("Bobby")
 
 def test_add_too_many_boxers_to_ring(ring_model, sample_boxer1, sample_boxer2, sample_boxer3):
@@ -118,7 +118,7 @@ def test_get_fighting_skill(ring_model, sample_boxer1):
     """
     
     skill = ring_model.get_fighting_skill(sample_boxer1)
-    age_modifier = -1 if boxer.age < 25 else (-2 if boxer.age > 35 else 0)
+    age_modifier = -1 if Boxer.age < 25 else (-2 if Boxer.age > 35 else 0)
     assert skill == (sample_boxer1.weight * len(sample_boxer1.name))+(sample_boxer1.reach/10)+ age_modifier
 
 ##################################################
