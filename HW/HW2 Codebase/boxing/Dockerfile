@@ -17,7 +17,7 @@ COPY .env /app/.env
 RUN pip install -r requirements.txt
 
 # Install SQLite3
-RUN apt-get update && apt-get install -y sqlite3
+RUN apt-get update && apt-get install -y sqlite3 curl
 
 # Add a shell script that loads the .env file and handles database creation
 COPY ./sql/create_db.sh /app/sql/create_db.sh
@@ -28,7 +28,10 @@ RUN chmod +x /app/sql/create_db.sh
 VOLUME ["/app/db"]
 
 # Make port 5000 available to the world outside this container
-EXPOSE 5000
+EXPOSE 5001
 
 # Run the entrypoint script when the container launches
 CMD ["/app/entrypoint.sh"]
+COPY ./entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+ENTRYPOINT ["/app/entrypoint.sh"]
