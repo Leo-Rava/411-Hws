@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the base URL for the Flask API
-BASE_URL="http://localhost:5000/api"
+BASE_URL="http://localhost:5001/api"
 
 # Flag to control whether to echo JSON output
 ECHO_JSON=false
@@ -60,9 +60,9 @@ add_boxer() {
   reach=$4
   age=$5
 
-  echo "Adding boxer ($artist - $title, $year) to the ring..."
-  curl -s -X POST "$BASE_URL/create-boxer" -H "Content-Type: application/json" \
-    -d "{\"name\":\"$name\", \"weight\":\"$weight\", \"height\":$height, \"reach\":\"$reach\", \"age\":$age}" | grep -q '"status": "success"'
+  echo "Adding boxer ($name, $weight, $height, $reach, $age) to the ring..."
+  curl -s -X POST "$BASE_URL/add-boxer" -H "Content-Type: application/json" \
+    -d "{\"name\":\"$name\", \"weight\":$weight, \"height\":$height, \"reach\":$reach, \"age\":$age}" | grep -q '"status": "success"'
 
   if [ $? -eq 0 ]; then
     echo "Boxer added successfully."
@@ -103,10 +103,10 @@ get_boxer_by_id() {
 }
 
 get_boxer_by_name() {
-  name=$1
+  boxer_name=$1
 
-  echo "Getting boxer by name (Name: $name)..."
-  response=$(curl -s -X GET "$BASE_URL/get-boxer-by-name/$boxer_name")
+  echo "Getting boxer by name (Name: $boxer_name)..."
+  response=$(curl -s -X GET "$BASE_URL/get-boxer-by-name/"$boxer_name"")
   if echo "$response" | grep -q '"status": "success"'; then
     echo "Boxer retrieved successfully by name."
     if [ "$ECHO_JSON" = true ]; then
@@ -114,7 +114,7 @@ get_boxer_by_name() {
       echo "$response" | jq .
     fi
   else
-    echo "Failed to get boxer by name key."
+    echo "Failed to get boxer by name."
     exit 1
   fi
 }
@@ -126,12 +126,12 @@ get_boxer_by_name() {
 ############################################################
 
 enter_ring() {
-  boxer=$1
+  boxer_name=$1
 
   echo "Adding boxer to ring: $boxer..."
   response=$(curl -s -X POST "$BASE_URL/enter-ring" \
     -H "Content-Type: application/json" \
-    -d "{\"artist\":\"$boxer\"}")
+    -d "{\"name\":\"$boxer_name\"}")
 
   if echo "$response" | grep -q '"status": "success"'; then
     echo "boxer added to playlist successfully."
@@ -151,9 +151,9 @@ clear_boxers() {
   response=$(curl -s -X POST "$BASE_URL/clear-boxers")
 
   if echo "$response" | grep -q '"status": "success"'; then
-    echo "Playlist cleared successfully."
+    echo "Ring cleared successfully."
   else
-    echo "Failed to clear playlist."
+    echo "Failed to clear ring."
     exit 1
   fi
 }
@@ -185,7 +185,7 @@ get_boxers() {
 # Function to play the rest of the playlist
 bout() {
   echo "initiating fight between boxers in the ring..."
-  curl -s -X POST "$BASE_URL/fight" | grep -q '"status": "success"'
+  curl -s -X GET "$BASE_URL/fight" | grep -q '"status": "success"'
   if [ $? -eq 0 ]; then
     echo "Boxers fought played successfully."
   else
@@ -202,12 +202,12 @@ bout() {
 
 # Function to get the song leaderboard sorted by play count
 get_leaderboard() {
-  echo "Getting boxer leaderboard sorted by win count..."
-  response=$(curl -s -X GET "$BASE_URL/boxer-leaderboard?sort=win_count")
+  echo "Getting boxer leaderboard sorted by wins..."
+  response=$(curl -s -X GET "$BASE_URL/leaderboard?sort=wins")
   if echo "$response" | grep -q '"status": "success"'; then
     echo "Boxing leaderboard retrieved successfully."
     if [ "$ECHO_JSON" = true ]; then
-      echo "Leaderboard JSON (sorted by win count):"
+      echo "Leaderboard JSON (sorted by wins):"
       echo "$response" | jq .
     fi
   else
@@ -224,24 +224,27 @@ check_health
 check_db
 
 # Create songs
-create_boxer "Josh" 165 54 3.4 32
-create_boxer "Bob" 180 72 3.9 24
-create_boxer "Jebedia" 200 78 4.1 19
-create_boxer "Queen" 130 60 2.6 37
-create_boxer "Donna" 190 40 4 40
+add_boxer "Josh" 165 54 3.3 32
+add_boxer "Bob" 180 72 3.9 24
+add_boxer "Jebedia" 200 78 4.1 19
+add_boxer "Queen" 130 60 2.6 37
+add_boxer "Donna" 190 40 4 40
 
 delete_boxer 1
 
 get_boxer_by_id 2
 get_boxer_by_name "Bob"
 
-get_leaderboard
 
-enter_ring "Jebedia" 200 78 4.1 19
-enter_ring "Queen" 130 60 2.6 37 
+enter_ring "Jebedia"
+enter_ring "Queen"
 
 get_boxers
 
 bout
 
+get_leaderboard
+
 clear_boxers
+
+echo "All tests cleared succesfully!"
