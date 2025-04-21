@@ -22,7 +22,7 @@ class Boxers(db.Model):
     """
     __tablename__ ="Boxers"
 
-    id = db.Column(id.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String, nullable=False)
     weight = db.Column(db.Integer, nullable=False)
     height = db.Column(db.Float, nullable=False)
